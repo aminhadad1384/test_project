@@ -1,0 +1,7 @@
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\bin\Debug\test_project.exe.config
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\bin\Debug\test_project.exe
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\bin\Debug\test_project.pdb
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\obj\Debug\test_project.csproj.AssemblyReference.cache
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\obj\Debug\test_project.csproj.CoreCompileInputs.cache
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\obj\Debug\test_project.exe
+C:\Users\Gity.Pakhsh\Desktop\New folder (2)\test_project\obj\Debug\test_project.pdb
