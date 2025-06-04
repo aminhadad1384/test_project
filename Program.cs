@@ -12,6 +12,7 @@ namespace test_project
         {
             Console.WriteLine("hello");
             char x = 'a';
+            string s = "sdcf";
 
         }
     }
