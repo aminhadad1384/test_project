@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace test_project
 {
-
     enum tajhizt_item
     {
         yakhchal = 0, miz, sandali, takht, komod
+    }
+    enum status
+    {
+        sakem = 0, maayob, darhaletaamir
     }
     class khabgah
     {
@@ -38,13 +41,13 @@ namespace test_project
             set { m_kh = value; }
         }
 
-        protected string[] khabgah_kh;
-        public string[] khbg
+        protected static khabgah[] khabgah_kh = new khabgah[1000];
+        public khabgah[] khbg
         {
             get { return khabgah_kh; }
             set { khabgah_kh = value; }
         }
-        protected int tos;
+        protected static int tos = 0;
         public int ts
         {
             get { return tos; }
@@ -55,19 +58,19 @@ namespace test_project
             this.address_kh = address_kh;
             this.zarfiat_kh = zarfiat_kh;
             m_kh = kh;
-            khabgah_kh = new string[zarfiat_kh];
-            tos = 0;
+
 
         }
-        public string show_kh(string n, string add, int z, mas_khabgah mk)
+        public string show_kh()
         {
-            return $"name:{n} address : {add} zarfiat : {z} and masool : {mk.showmasoolkh()}";
+            return $"name:{this.name_kh} address : {this.address_kh}  zarfiat :  {this.zarfiat_kh}  and masool :  {this.m_kh.showmasoolkh()}";
         }
-        public void add_khabgah(string n, string add, int z, mas_khabgah mk)
+        public void add_khabgah()
         {
             if (tos < khabgah_kh.Length)
             {
-                khabgah_kh[tos] = show_kh(n, add, z, mk);
+                khabgah k = new khabgah(this.name_kh, this.address_kh, this.zarfiat_kh, this.m_kh);
+                khabgah_kh[tos] = k;
                 tos++;
             }
             else
@@ -82,7 +85,7 @@ namespace test_project
                 bool found = false;
                 for (int i = 0; i < tos; i++)
                 {
-                    if (khabgah_kh[i].Contains(kh))
+                    if (khabgah_kh[i].show_kh().Contains(kh))
                     {
                         for (int j = i + 1; j < tos; j++)
                         {
@@ -108,9 +111,10 @@ namespace test_project
             for (int i = 0; i < tos; i++)
             {
 
-                if (khabgah_kh[i].Contains(n1))
+                if (khabgah_kh[i].show_kh().Contains(n1))
                 {
-                    khabgah_kh[i] = show_kh(n2, add2, z2, mk2); edited = true;
+                    khabgah k2 = new khabgah(n2, add2, z2, mk2);
+                    khabgah_kh[i] = k2; edited = true;
                 }
 
             }
@@ -129,12 +133,12 @@ namespace test_project
             {
                 if (khabgah_kh[i] != null)
                 {
-                    Console.WriteLine($"{i + 1} : {khabgah_kh[i]} ");
+                    Console.WriteLine($"{i + 1} : {khabgah_kh[i].show_kh()} ");
                     Console.WriteLine(new string('-', 100));
                 }
             }
         }
-        public void show_name_khabgahs()
+        public static void show_name_khabgahs()
         {
             if (tos == 0)
             {
@@ -145,15 +149,26 @@ namespace test_project
             Console.WriteLine(new string('-', 45));
             for (int i = 0; i < tos; i++)
             {
-                string kh = khabgah_kh[i];
-                int end = kh.IndexOf("address");
 
-
-                Console.WriteLine($"{i + 1} : {kh.Substring(5, end - 5).Trim()}");
+                Console.WriteLine($"{i + 1} : {khabgah_kh[i].name_kh}");
                 Console.WriteLine(new string('-', 45));
             }
         }
+        public static khabgah find_khabgah(string n)
+        {
 
+            if (khabgah_kh == null || khabgah_kh.Length == 0)
+                Console.WriteLine("no khabgah yet! ");
+            for (int i = 0; i < tos; i++)
+            {
+                if (khabgah_kh[i].show_kh().Contains(n))
+                {
+                    return khabgah_kh[i];
+                }
+            }
+            Console.WriteLine("not found!! ");
+            return null;
+        }
 
     }
     class bolok
@@ -182,27 +197,26 @@ namespace test_project
             get { return mb_b; }
             set { mb_b = value; }
         }
-        protected string[] boloks_b;
-        protected int tos;
+        protected static bolok[] boloks_b = new bolok[1000];
+        protected static int tos = 0;
         public bolok(string name_b, int tabaqat_b, int otaq, mas_bolok mb_b)
         {
             this.name_b = name_b;
             this.tabaqat_b = tabaqat_b;
             this.otaq_b = otaq;
             this.mb_b = mb_b;
-            boloks_b = new string[tabaqat_b * otaq];
-            tos = 0;
         }
 
-        public string show_bolok(string name_b, int tabaqat_b, int otaq, mas_bolok mb_b)
+        public string show_bolok()
         {
-            return $"name : {name_b} tabaqat : {tabaqat_b} tedad otaq : {otaq_b} masool blolok : {mb_b.show_mb()} ";
+            return $"name : {this.name_b} tabaqat : {this.tabaqat_b} tedad otaq : {this.otaq_b} masool blolok : {this.mb_b.show_mb()} ";
         }
         public void add_to_bolok(string name_b, int tabaqat_b, int otaq, mas_bolok mb_b)
         {
             if (tos < boloks_b.Length)
             {
-                boloks_b[tos] = show_bolok(name_b, tabaqat_b, otaq, mb_b);
+                bolok b1 = new bolok(name_b, tabaqat_b, otaq, mb_b);
+                boloks_b[tos] = b1;
                 tos++;
             }
             else
@@ -217,7 +231,7 @@ namespace test_project
                 bool found = false;
                 for (int i = 0; i < tos; i++)
                 {
-                    if (boloks_b[i].Contains(bl))
+                    if (boloks_b[i].show_bolok().Contains(bl))
                     {
                         for (int j = i + 1; j < tos; j++)
                         {
@@ -243,9 +257,10 @@ namespace test_project
             for (int i = 0; i < tos; i++)
             {
 
-                if (boloks_b[i].Contains(n1))
+                if (boloks_b[i].show_bolok().Contains(n1))
                 {
-                    boloks_b[i] = show_bolok(n2, tab, ot, mb2); edited = true;
+                    bolok b2 = new bolok(n2, tab, ot, mb2);
+                    boloks_b[i] = b2; edited = true;
                 }
 
             }
@@ -264,12 +279,12 @@ namespace test_project
             {
                 if (boloks_b != null)
                 {
-                    Console.WriteLine($"{i + 1} : {boloks_b[i]} ");
+                    Console.WriteLine($"{i + 1} : {boloks_b[i].show_bolok()} ");
                     Console.WriteLine(new string('-', 200));
                 }
             }
         }
-        public void show_name_bolok()
+        public static void show_name_bolok()
         {
             if (tos == 0)
             {
@@ -280,13 +295,24 @@ namespace test_project
             Console.WriteLine(new string('-', 50));
             for (int i = 0; i < tos; i++)
             {
-                string bl = boloks_b[i];
-                int end = bl.IndexOf("tabaqat");
-
-
-                Console.WriteLine($"{i + 1} : {bl.Substring(6, end - 6).Trim()} ");
+                Console.WriteLine($"{i + 1} : {boloks_b[i].nam_b} ");
                 Console.WriteLine(new string('-', 50));
             }
+        }
+        public static bolok find_bolok(string n)
+        {
+
+            if (boloks_b == null || boloks_b.Length == 0)
+                Console.WriteLine("no bolok yet! ");
+            for (int i = 0; i < tos; i++)
+            {
+                if (boloks_b[i].show_bolok().Contains(n))
+                {
+                    return boloks_b[i];
+                }
+            }
+            Console.WriteLine("not found!! ");
+            return null;
         }
 
 
@@ -295,27 +321,104 @@ namespace test_project
     class otaq
     {
         protected int shomare_ot;
+        public int sh_ot
+        {
+            get { return shomare_ot; }
+            set { shomare_ot = value; }
+        }
         protected int tabaqe_ot;
+        public int tab_ot
+        {
+            get { return tabaqe_ot; }
+            set { tabaqe_ot = value; }
+        }
         protected int zarfiat_ot;
-        public otaq(int shomare_ot, int tabaqe_ot, int zarfiat_ot)
+        public int zrf_ot
+        {
+            get { return zarfiat_ot; }
+            set { zarfiat_ot = value; }
+        }
+        public static otaq[] otaqha = new otaq[1000];
+        public static int tos = 0;
+        public otaq(int shomare_ot, int tabaqe_ot, int zarfiat_ot = 6)
         {
             this.shomare_ot = shomare_ot;
             this.tabaqe_ot = tabaqe_ot;
             this.zarfiat_ot = zarfiat_ot;
         }
+        public string otaq_tostr()
+        {
+            return $" shomare otaq: {shomare_ot} tabaqe : {tabaqe_ot} zarfiat : {zarfiat_ot}  ";
+        }
+
+
 
     }
 
     class tajhizat
     {
         protected tajhizt_item tajhizat_taj;
+        public tajhizt_item tajh
+        {
+            get { return tajhizat_taj; }
+            set { tajhizat_taj = value; }
+        }
         protected string patnumber_taj;
-        public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj)
+        public string partnum
+        {
+            get { return patnumber_taj; }
+            set { patnumber_taj = value; }
+        }
+        protected string shomare_amval_taj;
+        public string shmare_amv
+        {
+            get { return shomare_amval_taj; }
+            set { shomare_amval_taj = value; }
+        }
+        protected status status_tajhiz;
+        public status st_t
+        {
+            get { return status_tajhiz; }
+            set { status_tajhiz = value; }
+        }
+        protected static tajhizat[] all_info_tajh = new tajhizat[1000];
+        protected static int tos = 0;
+        public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj, string shomare_amval, status status_tajhiz = 0)
         {
             this.tajhizat_taj = tajhizat_taj;
             this.patnumber_taj = patnumber_taj;
+            this.status_tajhiz = status_tajhiz;
+            this.shomare_amval_taj = shomare_amval;
+        }
+        public string show_tajhiz()
+        {
+            return $" name : {tajhizat_taj} part number  :  {patnumber_taj}  shmare amval : {shomare_amval_taj} and vaziat : {status_tajhiz} ";
+        }
+        public void add_to_tajhizat()
+        {
+            if (tos != all_info_tajh.Length)
+            {
+                all_info_tajh[tos] = this;
+                tos++;
+            }
+            else Console.WriteLine("tajhizat are fulll !!");
+        }
+        public static void sabtTajhizjadid()
+        {
+
+            Console.WriteLine("Noe tajhiz (0:Yakhchal, 1:Miz, 2:Sandali, 3:Takht, 4:Komod):");
+            tajhizt_item noe = (tajhizt_item)int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Part Number : (001 - 005):");
+            string partnum = Console.ReadLine();
+            Console.WriteLine("shomare amval : (8number) ");
+            string shmare_amval = Console.ReadLine();
+            tajhizat jadid = new tajhizat(noe, partnum, shmare_amval);
+            jadid.add_to_tajhizat();
+
         }
     }
+
     class person
     {
         protected string fullname_per;
@@ -556,28 +659,50 @@ namespace test_project
             get { return studentNumber; }
             set { studentNumber = value; }
         }
-        //protected otaq otaghDaneshjoo;
-        //protected bolok bolokDaneshjoo;
-        //protected khabgah khabgahDaneshjoo;
+        protected string otaghDaneshjoo;
+        public string ot_daneshjo
+        {
+            get { return otaghDaneshjoo; }
+            set { otaghDaneshjoo = value; }
+        }
+        protected string bolokDaneshjoo;
+        public string bl_daneshjo
+        {
+            get { return bolokDaneshjoo; }
+            set { bolokDaneshjoo = value; }
+        }
+        protected string khabgahDaneshjoo;
+        public string kh_daneshjo
+        {
+            get { return khabgahDaneshjoo; }
+            set { khabgahDaneshjoo = value; }
+        }
         //protected List<tajhizat> tajhizatList;
         protected static daneshjoo[] danshjos = new daneshjoo[1000];
         protected static int tos = 0;
-        public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per) : base(fullname_per, code_melli_per, phone_number_per, address_per)
+        public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, string ot_d = null, string bl_d = null, string kh_d = null) :
+            base(fullname_per, code_melli_per, phone_number_per, address_per)
         {
             this.studentNumber = studentNumber;
+            this.ot_daneshjo = ot_d;
+            this.bolokDaneshjoo = bl_d;
+            this.khabgahDaneshjoo = kh_d;
         }
         public string show_student()
         {
-            return base.showperson() + $"  shmare daneshjooii: {studentNumber}";
+            return base.showperson() + $"  shmare daneshjooii: {this.studentNumber} and khabgah {this.khabgahDaneshjoo} bolok {this.bolokDaneshjoo} otaq {this.ot_daneshjo} ";
         }
 
         public void add_to_danshjo()
         {
             if (tos < danshjos.Length)
             {
-                daneshjoo new_danshjo = new daneshjoo(this.fullname_per, this.studentNumber, this.code_melli_per, this.phone_number_per, this.address_per);
-                danshjos[tos] = new_danshjo;
-                tos++;
+                if (daneshjoo.find_student(this.studentNumber) == null)
+                {
+                    danshjos[tos] = this;
+                    tos++;
+                }
+                else Console.WriteLine("this student is exist !!");
             }
             else
             {
@@ -613,35 +738,25 @@ namespace test_project
             }
         }
 
-        public static void edit_danehjo(string n1, string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per)
+
+        public static daneshjoo find_student(string n)
         {
-            bool edited = false;
-            for (int i = 0; i < tos; i++)
+
+            if (tos == 0)
             {
-
-                if (danshjos[i].show_student().Contains(n1))
-                {
-                    daneshjoo new_daneshjo = new daneshjoo(fullname_per, studentNumber, code_melli_per, phone_number_per, address_per);
-                    danshjos[i] = new_daneshjo; edited = true;
-                }
-
+                Console.WriteLine("no student yet! ");
+                return null;
             }
-            if (!edited) Console.WriteLine("no found to edit !!! ");
-        }
-        public static string find_student(string n)
-        {
 
-            if (danshjos == null || danshjos.Length == 0)
-                return "no student yet! ";
             for (int i = 0; i < tos; i++)
             {
                 if (danshjos[i].fullname == n || danshjos[i].studentNumber == n)
                 {
-                    return danshjos[i].show_student();
-
+                    return danshjos[i];
                 }
             }
-            return "not found!! ";
+            Console.WriteLine("not found!! ");
+            return null;
         }
         public static void show_all_daneshjooyan()
         {
@@ -653,8 +768,77 @@ namespace test_project
                 Console.WriteLine(new string('_', 200));
             }
         }
+        public static void show_name_students()
+        {
+            if (tos == 0)
+            {
+                Console.WriteLine("No student added yet.");
+                return;
+            }
+            Console.WriteLine("all student :   ");
+            Console.WriteLine(new string('-', 45));
+            for (int i = 0; i < tos; i++)
+            {
 
+                Console.WriteLine($"{i + 1} : {danshjos[i].fullname}");
+                Console.WriteLine(new string('-', 45));
+            }
+        }
+        public void sabt_nam(string fullname)
+        {
+            daneshjoo d = find_student(fullname);
+            if (d == null)
+            {
+                Console.WriteLine("Student not found!");
+                return;
+            }
+
+            khabgah.show_name_khabgahs();
+            Console.WriteLine("select khabgah :");
+            string kh = Console.ReadLine();
+            var kh2 = khabgah.find_khabgah(kh);
+            if (kh2 == null)
+            {
+                Console.WriteLine("Khabgah not found!");
+                return;
+            }
+            string k2 = kh2.namekh_kh;
+            bolok.show_name_bolok();
+            Console.WriteLine("select bolok : ");
+            string bl = Console.ReadLine();
+            var b2 = bolok.find_bolok(bl);
+            if (b2 == null)
+            {
+                Console.WriteLine("Bolok not found!");
+                return;
+            }
+            string bolok2 = b2.nam_b;
+            Console.WriteLine("select otaq : ");
+            string ot = Console.ReadLine();
+
+            d.khabgahDaneshjoo = k2;
+            d.bolokDaneshjoo = bolok2;
+            d.otaghDaneshjoo = ot;
+
+            Console.WriteLine("sabtenam movafaqiat amiz :) ");
+        }
+        public void jabejaii(string fullname)
+        {
+            daneshjoo d1 = find_student(fullname);
+            if (d1 == null)
+            {
+                Console.WriteLine("student not found !!");
+                return;
+            }
+            Console.WriteLine(d1.show_student());
+            Console.WriteLine("be tartib khabgah bolok va otaq ra begooid");
+            d1.kh_daneshjo = Console.ReadLine();
+            d1.bolokDaneshjoo = Console.ReadLine();
+            d1.otaghDaneshjoo = Console.ReadLine();
+
+        }
     }
+
 
     class Program
     {
