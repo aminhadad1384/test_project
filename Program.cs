@@ -383,6 +383,7 @@ namespace test_project
         }
         protected static tajhizat[] all_info_tajh = new tajhizat[1000];
         protected static int tos = 0;
+        protected static string[,] sh_amvals = new string[1000, 5];
         public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj, string shomare_amval, status status_tajhiz = 0)
         {
             this.tajhizat_taj = tajhizat_taj;
@@ -405,17 +406,42 @@ namespace test_project
         }
         public static void sabtTajhizjadid()
         {
-
+            int a1 = 0, a2 = 0, a3 = 0, a4 = 0,a5 = 0;
             Console.WriteLine("Noe tajhiz (0:Yakhchal, 1:Miz, 2:Sandali, 3:Takht, 4:Komod):");
-            tajhizt_item noe = (tajhizt_item)int.Parse(Console.ReadLine());
-
+            if (!int.TryParse(Console.ReadLine(), out int tajIndex) || tajIndex < 0 || tajIndex > 4)
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌");
+                return;
+            }
+            tajhizt_item noe = (tajhizt_item)tajIndex;
             Console.WriteLine("Part Number : (001 - 005):");
             string partnum = Console.ReadLine();
-            Console.WriteLine("shomare amval : (8number) ");
+            int index = int.Parse(partnum)-1;
+            Console.WriteLine("shomare amval : ( 5 number) ");
             string shmare_amval = Console.ReadLine();
-            tajhizat jadid = new tajhizat(noe, partnum, shmare_amval);
+            int i = 0;
+            for (;i<1000 && sh_amvals[i,index]!=null; i++)
+            {
+                if (sh_amvals[i,index] == (shomare_amval+partnum))
+                {
+                    Console.WriteLine("❌ shomare amval tekreri ❌");
+                    return;
+                }
+            }
+            if (i >= 1000)
+            {
+                Console.WriteLine("❌ kapasite takmil shode baraye in part number ❌");
+                return;
+            }
+            sh_amvals[i, index] = shmare_amval + partnum;
+            tajhizat jadid = new tajhizat(noe, partnum, shmare_amval+partnum);
             jadid.add_to_tajhizat();
-
+        }
+        
+        public static void add_to_otaq()
+        {
+            int x = 2;
+            
         }
     }
 
@@ -845,7 +871,7 @@ namespace test_project
         static void Main(string[] args)
         {
             
-
+            
         }
     }
 }
