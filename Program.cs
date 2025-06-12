@@ -169,7 +169,21 @@ namespace test_project
             Console.WriteLine("not found!! ");
             return null;
         }
-
+        public static void zrf_kh()
+        {
+            Console.WriteLine("zarfiat ha: ");
+            Console.WriteLine(new string('-', 200));
+            for (int i = 0; i < tos; i++)
+            {
+                int c = 0;
+                for (int j = 0; j < daneshjoo.tos; j++)
+                {
+                    if (khabgah_kh[i] != null && daneshjoo.danshjos[j] != null && daneshjoo.danshjos[j].kh_daneshjo == khabgah_kh[i].namekh_kh) c++;
+                }
+                Console.WriteLine($"{khabgah_kh[i].name_kh} :  {khabgah_kh[i].zarfiat_kh - c}");
+                Console.WriteLine(new string('-', 200));
+            }
+        }
     }
     class bolok
     {
@@ -315,9 +329,21 @@ namespace test_project
             Console.WriteLine("not found!! ");
             return null;
         }
-
-
-
+        public static void zrf_bolok()
+        {
+            Console.WriteLine("zarfiat haye boloks: ");
+            Console.WriteLine(new string('-', 200));
+            for (int i = 0; i < tos; i++)
+            {
+                int c = 0;
+                for (int j = 0; j < daneshjoo.tos; j++)
+                {
+                    if (boloks_b[i] != null && daneshjoo.danshjos[j] != null && daneshjoo.danshjos[j].bl_daneshjo == boloks_b[i].nam_b) c++;
+                }
+                Console.WriteLine($"{boloks_b[i].nam_b} :  {(boloks_b[i].otaqq_b * 6) - c}");
+                Console.WriteLine(new string('-', 200));
+            }
+        }
     }
     class otaq
     {
@@ -450,6 +476,20 @@ namespace test_project
             Console.WriteLine("otaq haye por: ");
             for (int i = 0; i < indexp; i++) Console.WriteLine(por[i].sh_ot);
         }
+        public void list_otaq_tajhizat()
+        {
+            Console.WriteLine("tamam tajhizat tamam otaqha :");
+            Console.WriteLine(new string('-', 50));
+            for (int i = 0; i < tos; i++)
+            {
+                if (otaqha[i] != null)
+                {
+                    string tajhizInfo = otaqha[i].tajhizat_ot != null ? otaqha[i].tajhizat_ot.show_tajhiz() : "no tajhiz!";
+                    Console.WriteLine($"{i + 1}. {otaqha[i].shomare_ot} : {tajhizInfo}");
+                    Console.WriteLine(new string('-', 200));
+                }
+            }
+        }
     }
 
     class tajhizat
@@ -479,7 +519,16 @@ namespace test_project
             set { status_tajhiz = value; }
         }
         protected static tajhizat[] all_info_tajh = new tajhizat[1000];
+        public static tajhizat[] all_tj
+        {
+            get { return all_info_tajh; }
+        }
         protected static int tos = 0;
+        public static int ts
+        {
+            get { return tos; }
+            set { tos = value; }
+        }
         protected static string[,] sh_amvals = new string[1000, 5];
         public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj, string shomare_amval, status status_tajhiz = 0)
         {
@@ -657,7 +706,24 @@ namespace test_project
                 return;
             }
             t1.status_tajhiz = status.maayob;
-
+        }
+        public void show_all_amval()
+        {
+            if (tos == 0)
+            {
+                Console.WriteLine("No amval added yet.");
+                return;
+            }
+            Console.WriteLine("all amvals :   ");
+            Console.WriteLine(new string('-', 200));
+            for (int i = 0; i < tos; i++)
+            {
+                if (all_info_tajh[i] != null)
+                {
+                    Console.WriteLine($"{i + 1} : {all_info_tajh[i].show_tajhiz()} ");
+                    Console.WriteLine(new string('-', 200));
+                }
+            }
         }
     }
     class person
@@ -923,7 +989,12 @@ namespace test_project
             set { tajhizat_List = value; }
         }
         public static daneshjoo[] danshjos = new daneshjoo[1000];
-        protected static int tos = 0;
+        public static int tos;
+        public int ts
+        {
+            get { return tos; }
+            set { tos = value; }
+        }
         public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, otaq ot_d = null, string bl_d = null,
             string kh_d = null, tajhizat tajhizat_List = null) :
             base(fullname_per, code_melli_per, phone_number_per, address_per)
@@ -933,6 +1004,7 @@ namespace test_project
             this.bolokDaneshjoo = bl_d;
             this.khabgahDaneshjoo = kh_d;
             this.tajhizat_List = tajhizat_List;
+            tos = 0;
 
         }
         public string show_student()
@@ -1096,7 +1168,20 @@ namespace test_project
             }
             Console.WriteLine($"tedad daneshjohaye khabgahi : {count}");
         }
-
+        public void list_daneshjoo_tajhizat()
+        {
+            Console.WriteLine("tamam tajhizat tamam daneshjooyan :");
+            Console.WriteLine(new string('-', 50));
+            for (int i = 0; i < tos; i++)
+            {
+                if (danshjos[i] != null)
+                {
+                    string tajhizInfo = danshjos[i].tj_st != null ? danshjos[i].tj_st.show_tajhiz() : "no tajhiz!";
+                    Console.WriteLine($"{i + 1}. {danshjos[i].fullname} : {tajhizInfo}");
+                    Console.WriteLine(new string('-', 200));
+                }
+            }
+        }
     }
     class Program
     {
