@@ -482,10 +482,18 @@ namespace test_project
             Console.WriteLine(new string('-', 50));
             for (int i = 0; i < tos; i++)
             {
+                int stu = 1;
                 if (otaqha[i] != null)
                 {
-                    string tajhizInfo = otaqha[i].tajhizat_ot != null ? otaqha[i].tajhizat_ot.show_tajhiz() : "no tajhiz!";
-                    Console.WriteLine($"{i + 1}. {otaqha[i].shomare_ot} : {tajhizInfo}");
+                    Console.WriteLine($"{i + 1} : {otaqha[i].shomare_ot} :  yakhchal : {otaqha[i].taj_ot.shmare_amv}  ");
+                    for (int j = 0; j < daneshjoo.tos; j++)
+                    {
+                        if (daneshjoo.danshjos[j].ot_daneshjo.shomare_ot == otaqha[i].shomare_ot)
+                        {
+                            Console.WriteLine($"{stu} : {daneshjoo.danshjos[j].tj_st.show_tajhiz()} ");
+                            stu++;
+                        }
+                    }
                     Console.WriteLine(new string('-', 200));
                 }
             }
@@ -722,6 +730,29 @@ namespace test_project
                 {
                     Console.WriteLine($"{i + 1} : {all_info_tajh[i].show_tajhiz()} ");
                     Console.WriteLine(new string('-', 200));
+                }
+            }
+        }
+        public void list_mayobs_drhaltamir()
+        {
+            int count = 1;
+            Console.WriteLine("tamam maayob ha :");
+            for (int i = 0; i < tos; i++)
+            {
+                if (all_info_tajh[i].status_tajhiz == status.maayob)
+                {
+                    Console.WriteLine($"{count} : {all_info_tajh[i].tajhizat_taj} ");
+                    count++;
+                }
+            }
+            Console.WriteLine("tamam dahale taamir ha :");
+            count = 1;
+            for (int j = 0; j < tos; j++)
+            {
+                if (all_info_tajh[j].status_tajhiz == status.darhaletaamir)
+                {
+                    Console.WriteLine($"{count} : {all_info_tajh[j].tajhizat_taj}");
+                    count++;
                 }
             }
         }
@@ -1177,10 +1208,10 @@ namespace test_project
                 if (danshjos[i] != null)
                 {
                     string tajhizInfo = danshjos[i].tj_st != null ? danshjos[i].tj_st.show_tajhiz() : "no tajhiz!";
-                    Console.WriteLine($"{i + 1}. {danshjos[i].fullname} : {tajhizInfo}");
-                    Console.WriteLine(new string('-', 200));
+                    Console.WriteLine($"{(i + 1).ToString().PadRight(4)}. {danshjos[i].fullname} : {tajhizInfo}");
                 }
             }
+            Console.WriteLine(new string('-', 200));
         }
     }
     class Program
