@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -538,6 +539,8 @@ namespace test_project
             set { tos = value; }
         }
         protected static string[,] sh_amvals = new string[1000, 5];
+        protected static string[] gozaresh_darkhast_ha = new string[1000];
+        public static int count_gozaresh_amvl = 0;
         public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj, string shomare_amval, status status_tajhiz = 0)
         {
             this.tajhizat_taj = tajhizat_taj;
@@ -714,6 +717,8 @@ namespace test_project
                 return;
             }
             t1.status_tajhiz = status.maayob;
+            gozaresh_darkhast_ha[count_gozaresh_amvl] = $"{t1.tajhizat_taj} ba partNumber {t1.patnumber_taj} baraye {(daneshjoo.find_student(t1.shmare_amv)).fullname} dar hal taamir";
+            count_gozaresh_amvl++;
         }
         public void show_all_amval()
         {
@@ -754,6 +759,15 @@ namespace test_project
                     Console.WriteLine($"{count} : {all_info_tajh[j].tajhizat_taj}");
                     count++;
                 }
+            }
+        }
+        public static void gozaresh_darkhast_tamirat()
+        {
+            Console.WriteLine("gozaresh darkhast taamir amval : ");
+            Console.WriteLine(new string('_', 200));
+            for (int i = 0; i < count_gozaresh_amvl; i++)
+            {
+                Console.WriteLine($"{i + 1} : {gozaresh_darkhast_ha[i]}");
             }
         }
     }
@@ -1026,6 +1040,13 @@ namespace test_project
             get { return tos; }
             set { tos = value; }
         }
+        protected static string[] gozarsh_eskan = new string[1000];
+        public  string[] gozares
+        {
+            get { return gozarsh_eskan; }
+            set { gozarsh_eskan = value; }
+        }
+        public static int countt_gozaresh_eskan = 0;
         public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, otaq ot_d = null, string bl_d = null,
             string kh_d = null, tajhizat tajhizat_List = null) :
             base(fullname_per, code_melli_per, phone_number_per, address_per)
@@ -1100,7 +1121,7 @@ namespace test_project
             }
             for (int i = 0; i < tos; i++)
             {
-                if (danshjos[i].fullname == n || danshjos[i].studentNumber == n)
+                if (danshjos[i].fullname == n || danshjos[i].studentNumber == n || danshjos[i].tajhizat_List.shmare_amv==n)
                 {
                     return danshjos[i];
                 }
@@ -1170,8 +1191,9 @@ namespace test_project
             d.khabgahDaneshjoo = k2;
             d.bolokDaneshjoo = bolok2;
             d.otaghDaneshjoo = ot1;
-
             Console.WriteLine("sabtenam movafaqiat amiz :) ");
+            gozarsh_eskan[countt_gozaresh_eskan] = $"{fullname} dar khabgah {k2} dar bolok {bolok2} var dar otaq {ot} eskan karde .";
+            countt_gozaresh_eskan++;
         }
         public void jabejaii(string fullname)
         {
@@ -1213,11 +1235,21 @@ namespace test_project
             }
             Console.WriteLine(new string('-', 200));
         }
+        public static void gozaresh_eskan()
+        {
+            Console.WriteLine("gozaresh tamame eskan ha :");
+            Console.WriteLine(new string('-', 200));
+            for(int i=0;i<countt_gozaresh_eskan;i++)
+            {
+                Console.WriteLine($"{i+1} : {gozarsh_eskan[i]}");
+            }
+        }
     }
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("sxcfnm");
             
             
         }
