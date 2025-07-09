@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -15,7 +16,7 @@ namespace test_project
     }
     enum status
     {
-        sakem = 0, maayob, darhaletaamir
+        salem = 0, maayob, darhaletaamir
     }
     class khabgah
     {
@@ -37,8 +38,8 @@ namespace test_project
             get { return zarfiat_kh; }
             set { zarfiat_kh = value; }
         }
-        protected mas_khabgah m_kh;
-        public mas_khabgah mskhabgaj
+        protected string m_kh;
+        public string mskhabgaj
         {
             get { return m_kh; }
             set { m_kh = value; }
@@ -50,30 +51,23 @@ namespace test_project
             get { return khabgah_kh; }
             set { khabgah_kh = value; }
         }
-        protected static int tos = 0;
-        public static int ts
-        {
-            get { return tos; }
-            set { tos = value; }
-        }
-        public khabgah(string nmae_kh, string address_kh, int zarfiat_kh, mas_khabgah kh)
+        public static int tos = 0;
+        public khabgah(string nmae_kh, string address_kh, int zarfiat_kh, string kh=" ")
         {
             this.name_kh = nmae_kh;
             this.address_kh = address_kh;
             this.zarfiat_kh = zarfiat_kh;
-            m_kh = kh;
-
-
+            this.m_kh = kh;
         }
         public string show_kh()
         {
-            return $"name:{this.name_kh} address : {this.address_kh}  zarfiat :  {this.zarfiat_kh}  and masool :  {this.m_kh.showmasoolkh()}";
+            return $"name:{this.name_kh} address : {this.address_kh}  zarfiat :  {this.zarfiat_kh}  and masool :  {mas_khabgah.find_mas_khabgah(this.m_kh).showmasoolkh()}";
         }
         public void add_khabgah()
         {
             if (tos < khabgah_kh.Length)
             {
-
+                mas_khabgah.find_mas_khabgah(this.m_kh).skkh = mas_khabgah.find_mas_khabgah(this.m_kh).skkh + " " + this.namekh_kh;
                 khabgah_kh[tos] = this;
                 tos++;
             }
@@ -91,6 +85,7 @@ namespace test_project
                 {
                     if (khabgah_kh[i].show_kh().Contains(kh))
                     {
+                        mas_khabgah.find_mas_khabgah(khabgah_kh[i].m_kh).skkh = mas_khabgah.find_mas_khabgah(khabgah_kh[i].m_kh).skkh.Replace(khabgah_kh[i].namekh_kh,"");
                         for (int j = i + 1; j < tos; j++)
                         {
                             khabgah_kh[j - 1] = khabgah_kh[j];
@@ -109,20 +104,14 @@ namespace test_project
                 Console.WriteLine("no khabgah !!");
             }
         }
-        public static void edit_khabgah(string n1, string n2, string add2, int z2, mas_khabgah mk2)
+        public void edit_khabgah(int x)
         {
-            bool edited = false;
-            for (int i = 0; i < tos; i++)
+            if (x <= tos)
             {
-
-                if (khabgah_kh[i].show_kh().Contains(n1))
-                {
-                    khabgah k2 = new khabgah(n2, add2, z2, mk2);
-                    khabgah_kh[i] = k2; edited = true;
-                    break;
-                }
+                mas_khabgah.find_mas_khabgah(this.m_kh).skkh = this.namekh_kh;
+                khabgah_kh[x - 1] = this;
             }
-            if (!edited) Console.WriteLine("no found to edit !!! ");
+            else { Console.WriteLine("no this khabgah to edit (you should select corrct number beetwen list of khangahs) !!"); }
         }
         public static void show_all_khabgah()
         {
@@ -209,8 +198,8 @@ namespace test_project
             get { return otaq_b; }
             set { otaq_b = value; }
         }
-        protected mas_bolok mb_b;
-        public mas_bolok mas_b
+        protected string mb_b;
+        public string mas_b
         {
             get { return mb_b; }
             set { mb_b = value; }
@@ -221,10 +210,8 @@ namespace test_project
             get { return boloks_b; }
             set { boloks_b = value; }
         }
-        protected static int tos = 0;
-        public static int ts_bolok
-        { get; set; } = 0;
-        public bolok(string name_b, int tabaqat_b, int otaq, mas_bolok mb_b)
+        public static int tos = 0;
+        public bolok(string name_b, int tabaqat_b, int otaq, string mb_b)
         {
             this.name_b = name_b;
             this.tabaqat_b = tabaqat_b;
@@ -234,22 +221,22 @@ namespace test_project
 
         public string show_bolok()
         {
-            return $"name : {this.name_b} tabaqat : {this.tabaqat_b} tedad otaq : {this.otaq_b} masool blolok : {this.mb_b.show_mb()} ";
+            return $"name : {this.name_b} tabaqat : {this.tabaqat_b} tedad otaq : {this.otaq_b} masool blolok : {mas_bolok.find_mas_bolok((this.mb_b)).show_mb()} ";
         }
         public  void add_to_bolok()
         {
             if (tos < boloks_b.Length)
             {
+                mas_bolok.find_mas_bolok(this.mb_b).sbl = this.name_b;
                 boloks_b[tos] = this;
                 tos++;
-                ts_bolok++;
             }
             else
             {
                 Console.WriteLine("the bolok is full ");
             }
         }
-        public void remove_bolok(string bl)
+        public static void remove_bolok(string bl)
         {
             if (tos != 0)
             {
@@ -258,6 +245,7 @@ namespace test_project
                 {
                     if (boloks_b[i].show_bolok().Contains(bl))
                     {
+                        mas_bolok.find_mas_bolok(boloks_b[i].mas_b).sbl ="??";
                         for (int j = i + 1; j < tos; j++)
                         {
                             boloks_b[j - 1] = boloks_b[j];
@@ -276,22 +264,17 @@ namespace test_project
                 Console.WriteLine("no bolok !!");
             }
         }
-        public static void edit_bolok(string n1, string n2, int tab, int ot, mas_bolok mb2)
+        public  void edit_bolok(int x)
         {
-            bool edited = false;
-            for (int i = 0; i < tos; i++)
+
+            if (x <= tos)
             {
-
-                if (boloks_b[i].show_bolok().Contains(n1))
-                {
-                    bolok b2 = new bolok(n2, tab, ot, mb2);
-                    boloks_b[i] = b2; edited = true;
-                    break;
-                }
-
+                mas_bolok.find_mas_bolok(this.mb_b).sbl = this.name_b;
+                boloks_b[x - 1] = this;
             }
-            if (!edited) Console.WriteLine("no found to edit !!! ");
+            else Console.WriteLine("no this bolok to edit !! ");
         }
+
         public static void show_all_boloks()
         {
             if (tos == 0)
@@ -473,7 +456,7 @@ namespace test_project
                 c = 0;
                 for (int j = 0; j < tos; j++)
                 {
-                    if (otaqha[i].sh_ot == daneshjoo.danshjos[j].ot_daneshjo.shomare_ot)
+                    if (otaqha[i].sh_ot == daneshjoo.danshjos[j].ot_daneshjo)
                     {
                         c++;
                     }
@@ -492,7 +475,7 @@ namespace test_project
             Console.WriteLine("otaq haye por: ");
             for (int i = 0; i < indexp; i++) Console.WriteLine(por[i].sh_ot);
         }
-        public void list_otaq_tajhizat()
+        public static void list_otaq_tajhizat()
         {
             Console.WriteLine("tamam tajhizat tamam otaqha :");
             Console.WriteLine(new string('-', 50));
@@ -504,7 +487,7 @@ namespace test_project
                     Console.WriteLine($"{i + 1} : {otaqha[i].shomare_ot} :  yakhchal : {otaqha[i].taj_ot.shmare_amv}  ");
                     for (int j = 0; j < daneshjoo.tos; j++)
                     {
-                        if (daneshjoo.danshjos[j].ot_daneshjo.shomare_ot == otaqha[i].shomare_ot)
+                        if (daneshjoo.danshjos[j].ot_daneshjo == otaqha[i].shomare_ot)
                         {
                             Console.WriteLine($"{stu} : {daneshjoo.danshjos[j].tj_st.show_tajhiz()} ");
                             stu++;
@@ -553,7 +536,7 @@ namespace test_project
             get { return tos; }
             set { tos = value; }
         }
-        protected static string[,] sh_amvals = new string[1000, 5];
+        protected static string[,] sh_amvals = new string[100, 5];
         protected static string[] gozaresh_darkhast_ha = new string[1000];
         public static int count_gozaresh_amvl = 0;
         public tajhizat(tajhizt_item tajhizat_taj, string patnumber_taj, string shomare_amval, status status_tajhiz = 0)
@@ -633,8 +616,6 @@ namespace test_project
             {
                 Console.WriteLine("wrong otaq ");
                 return;
-
-
             }
             string ot_name2 = Console.ReadLine();
             otaq ot2 = otaq.find_otaq(ot_name2);
@@ -701,6 +682,17 @@ namespace test_project
             Console.WriteLine("not found!! ");
             return null;
         }
+        public static void shomare_amvals_show()
+        {
+            for(int i=0;i<sh_amvals.GetLength(0);i++)
+            {
+                for(int j=0;j<sh_amvals.GetLength(1);j++)
+                {
+                    Console.Write(sh_amvals[i, j] + " ");
+                }
+                Console.WriteLine("");
+            }
+        }
         public static void sabte_darkhast(string shomareamval1)
         {
             tajhizat t1 = tajhizat.find_tajhiz(shomareamval1);
@@ -720,7 +712,7 @@ namespace test_project
                 Console.WriteLine("not found ");
                 return;
             }
-            Console.WriteLine($"vaziat  of {t1} : {t1.status_tajhiz}");
+            Console.WriteLine($"vaziat  of {t1.tajhizat_taj} : {t1.status_tajhiz}");
         }
         public static void sabt_maayobha(string s1)
         {
@@ -735,7 +727,7 @@ namespace test_project
             gozaresh_darkhast_ha[count_gozaresh_amvl] = $"{t1.tajhizat_taj} ba partNumber {t1.patnumber_taj} baraye {(daneshjoo.find_student(t1.shmare_amv)).fullname} dar hal taamir";
             count_gozaresh_amvl++;
         }
-        public void show_all_amval()
+        public static void show_all_amval()
         {
             if (tos == 0)
             {
@@ -753,7 +745,7 @@ namespace test_project
                 }
             }
         }
-        public void list_mayobs_drhaltamir()
+        public static void list_mayobs_drhaltamir()
         {
             int count = 1;
             Console.WriteLine("tamam maayob ha :");
@@ -821,7 +813,7 @@ namespace test_project
         }
         public virtual string showperson()
         {
-            return $"fullname : {fullname_per} code melli : {code_melli_per} phone number : {phone_number_per} address : {address_per}";
+            return $"fullname : {fullname_per} code melli : {code_melli_per}  phone number :  {phone_number_per} address  :  {address_per}  ";
         }
 
     }
@@ -841,7 +833,7 @@ namespace test_project
         }
         protected static mas_khabgah[] masoolan_kh = new mas_khabgah[1000];
         protected static int tos = 0;
-        public mas_khabgah(string fullname_per, string code_melli_per, string phone_number_per, string address_per, string semat="???", string skhabgah = "??")
+        public mas_khabgah(string fullname_per, string code_melli_per, string phone_number_per, string address_per, string semat="???", string skhabgah = "")
     : base(fullname_per, code_melli_per, phone_number_per, address_per)
         {
             this.semat_mk = semat;
@@ -856,7 +848,7 @@ namespace test_project
         {
             if (tos < masoolan_kh.Length)
             {
-                mas_khabgah new_masool = new mas_khabgah(this.fullname_per, this.code_melli_per, this.phone_number_per, this.address_per, this.semat_mk, this.skhabgah_mk);
+                mas_khabgah new_masool = new mas_khabgah(this.fullname_per, this.code_melli_per, this.phone_number_per, this.address_per, this.semat_mk);
                 masoolan_kh[tos] = new_masool;
                 tos++;
             }
@@ -894,14 +886,14 @@ namespace test_project
             }
         }
 
-        public static void edit_masool_kh(string n1, string fullname_per, string code_melli_per, string phone_number_per, string address_per, string semat, string skhabgah = "??")
+        public static void edit_masool_kh(string n1, string fullname_per, string code_melli_per, string phone_number_per, string address_per, string semat)
         {
             bool edited = false;
             for (int i = 0; i < tos; i++)
             {
                 if (masoolan_kh[i].showmasoolkh().Contains(n1))
                 {
-                    mas_khabgah new_masool = new mas_khabgah(fullname_per, code_melli_per, phone_number_per, address_per, semat, skhabgah);
+                    mas_khabgah new_masool = new mas_khabgah(fullname_per, code_melli_per, phone_number_per, address_per, semat);
                     masoolan_kh[i] = new_masool; edited = true;
                 }
 
@@ -922,7 +914,7 @@ namespace test_project
         {
             if (tos == 0)
             {
-                Console.WriteLine("no maool yet! ");
+                Console.WriteLine("no maool KHABGAH yet! ");
                 return null;
             }
             for (int i = 0; i < tos; i++)
@@ -1044,7 +1036,7 @@ namespace test_project
                     return masoolan_bolok[i];
                 }
             }
-            Console.WriteLine("not found!! ");
+            Console.WriteLine("not found masool bolok!! ");
             return null;
         }
 
@@ -1057,8 +1049,8 @@ namespace test_project
             get { return studentNumber; }
             set { studentNumber = value; }
         }
-        protected otaq otaghDaneshjoo;
-        public otaq ot_daneshjo
+        protected string otaghDaneshjoo;
+        public string ot_daneshjo
         {
             get { return otaghDaneshjoo; }
             set { otaghDaneshjoo = value; }
@@ -1095,7 +1087,7 @@ namespace test_project
             set { gozarsh_eskan = value; }
         }
         public static int countt_gozaresh_eskan = 0;
-        public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, otaq ot_d = null, string bl_d = null,
+        public daneshjoo(string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, string ot_d = null, string bl_d = null,
             string kh_d = null, tajhizat tajhizat_List = null) :
             base(fullname_per, code_melli_per, phone_number_per, address_per)
         {
@@ -1113,7 +1105,7 @@ namespace test_project
             return base.showperson() + $"  shmare daneshjooii: {this.studentNumber} and khabgah {this.khabgahDaneshjoo} bolok {this.bolokDaneshjoo} otaq {this.ot_daneshjo} tajhizat : {tajhizInfo_std} ";
         }
 
-        public void add_to_danshjo()
+        public  void add_to_danshjo()
         {
             if (tos < danshjos.Length)
             {
@@ -1165,7 +1157,7 @@ namespace test_project
             if (tos == 0)
             {
                 Console.WriteLine("no student yet! ");
-                return null;
+                
             }
             for (int i = 0; i < tos; i++)
             {
@@ -1187,6 +1179,21 @@ namespace test_project
                 Console.WriteLine(new string('_', 200));
             }
         }
+        public static void edit_student(string n1, string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, string ot_d = null, string bl_d = null,
+            string kh_d = null, tajhizat tajhizat_List=null)
+        {
+            bool edited = false;
+            for (int i = 0; i < tos; i++)
+            {
+                if (danshjos[i].fullname==n1)
+                {
+                    daneshjoo d = new daneshjoo(fullname_per,studentNumber ,code_melli_per, phone_number_per, address_per,ot_d,bl_d,kh_d,tajhizat_List);
+                    danshjos[i] = d; edited = true;
+                }
+
+            }
+            if (!edited) Console.WriteLine("no found to edit !!! ");
+        }
         public static void show_name_students()
         {
             if (tos == 0)
@@ -1203,7 +1210,7 @@ namespace test_project
                 Console.WriteLine(new string('-', 45));
             }
         }
-        public void sabt_nam(string fullname)
+        public static void sabt_nam(string fullname)
         {
             daneshjoo d = find_student(fullname);
             if (d == null)
@@ -1215,7 +1222,7 @@ namespace test_project
             khabgah.show_name_khabgahs();
             Console.WriteLine("select khabgah by number:");
             int kh = int.Parse(Console.ReadLine());
-            if (kh > khabgah.ts)
+            if (kh > khabgah.tos)
             {
                 Console.WriteLine("Khabgah not found!");
                 return;
@@ -1225,7 +1232,7 @@ namespace test_project
             bolok.show_name_bolok();
             Console.WriteLine("select bolok by number: ");
             int bl = int.Parse(Console.ReadLine());
-            if (bl > bolok.ts_bolok)
+            if (bl > bolok.tos)
             {
                 Console.WriteLine("Bolok not found!");
                 return;
@@ -1242,12 +1249,12 @@ namespace test_project
             otaq ot1 = otaq.find_otaq(otaq.otaqha[ot-1].sh_ot);
             d.khabgahDaneshjoo = k2;
             d.bolokDaneshjoo = b2;
-            d.otaghDaneshjoo = ot1;
+            d.otaghDaneshjoo = ot1.sh_ot;
             Console.WriteLine("sabtenam movafaqiat amiz :) ");
-            gozarsh_eskan[countt_gozaresh_eskan] = $"{fullname} dar khabgah {k2} dar bolok {b2} va dar otaq {ot1.sh_ot} eskan karde .";
+            gozarsh_eskan[countt_gozaresh_eskan] = $"{fullname} dar khabgah {k2} dar bolok {b2} va dar otaq {ot1} eskan karde .";
             countt_gozaresh_eskan++;
         }
-        public void jabejaii(string fullname)
+        public static void jabejaii(string fullname)
         {
             daneshjoo d1 = find_student(fullname);
             if (d1 == null)
@@ -1257,9 +1264,15 @@ namespace test_project
             }
             Console.WriteLine(d1.show_student());
             Console.WriteLine("be tartib khabgah bolok va otaq ra begooid");
-            d1.kh_daneshjo = Console.ReadLine();
-            d1.bolokDaneshjoo = Console.ReadLine();
-            d1.otaghDaneshjoo = otaq.find_otaq(Console.ReadLine());
+            khabgah.show_name_khabgahs();
+            int num_khabgah = int.Parse(Console.ReadLine());
+            d1.kh_daneshjo = khabgah.khbgh[num_khabgah-1].namekh_kh;
+            bolok.show_name_bolok();
+            int num_bl = int.Parse(Console.ReadLine());
+            d1.bolokDaneshjoo = bolok.bolook[num_khabgah-1].nam_b;
+            otaq.show_name_otaq();
+            int num_ot = int.Parse(Console.ReadLine());
+            d1.otaghDaneshjoo = otaq.otaqha[num_ot-1].sh_ot;
         }
 
         public static void amar_kolli()
@@ -1273,7 +1286,7 @@ namespace test_project
             }
             Console.WriteLine($"tedad daneshjohaye khabgahi : {count}");
         }
-        public void list_daneshjoo_tajhizat()
+        public static void list_daneshjoo_tajhizat()
         {
             Console.WriteLine("tamam tajhizat tamam daneshjooyan :");
             Console.WriteLine(new string('-', 50));
@@ -1309,43 +1322,55 @@ namespace test_project
                 "   3. modiriat ashkhas :\n" +
                 "   4. modiriat amval   :\n" +
                 "   5. gozaresh giri :\n");
-               int menu=int.Parse(Console.ReadLine());
+               var menu=Console.ReadLine();
                 switch(menu)
                 {
-                    case 1:
+                    case "1":
                         {
                             Console.WriteLine(" chekar mikoni? \n" +
                                 "   1: afzoodan khabgah \n" +
                                 "   2: hazf khabgah\n" +
                                 "   3: virayesh khabgah\n" +
                                 "   4:moshahede list khabgah ha \n");
-                            int menu_khabgah=int.Parse(Console.ReadLine());
+                            var menu_khabgah=Console.ReadLine();
                             switch(menu_khabgah)
                             {
-                                case 1:
+                                case "1":
                                     {
-                                        Console.WriteLine("be tartib nam adress zarfiat masool khabgah ra benvis :");
-                                        khabgah k = new khabgah(Console
-                                            .ReadLine(), Console.ReadLine(), int.Parse(Console.ReadLine()), mas_khabgah.find_mas_khabgah(Console.ReadLine()));
+                                        Console.WriteLine("be tartib nam adress zarfiat name masool khabgah ra benvis :");
+                                        mas_khabgah.show_all_masoolan_kh();
+                                        khabgah k = new khabgah(Console.ReadLine(), Console.ReadLine(), int.Parse(Console.ReadLine()),Console.ReadLine());
+                                        if (mas_khabgah.find_mas_khabgah(k.mskhabgaj)== null)
+                                        {
+                                            Console.WriteLine("ebteda  masool khabgah ra ezafe konid !!");
+                                            break;
+                                        }
                                         k.add_khabgah();
                                         break;
                                     }
-                                case 2:
-                                    {
-                                        Console.WriteLine("entekhab shomare khabgah baraye hazf :");
-                                        khabgah.show_name_khabgahs();
-                                        string kh = Console.ReadLine();
-                                        khabgah.remove_khabgah(kh);
+                                case "2":
+                                    {   khabgah.show_name_khabgahs();
+                                        if (khabgah.tos == 0) break;
+                                        Console.WriteLine("entekhab SHOMARE khabgah baraye hazf :");
+                                        int kh = int.Parse(Console.ReadLine());
+                                        khabgah.remove_khabgah(khabgah.khbgh[kh-1].namekh_kh);
                                         break;
                                     }
-                                case 3:
-                                    {
-                                        Console.WriteLine("entekhabe khabgah baraye virayesh (be tartib nam qabli khabgah nam address zarfiat masool khabgah jadad ) :");
-                                        khabgah.show_all_khabgah();
-                                        khabgah.edit_khabgah(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), int.Parse(Console.ReadLine()), mas_khabgah.find_mas_khabgah(Console.ReadLine()));
+                                case "3":
+                                    {   khabgah.show_all_khabgah();
+                                        if (khabgah.tos == 0) break;
+                                        Console.WriteLine("entekhabe khabgah baraye virayesh (be tartib SHOMARE qabli khabgah nam address zarfiat masool khabgah jadad ) :"); 
+                                        int num_kh = int.Parse(Console.ReadLine());
+                                        khabgah k = new khabgah(Console.ReadLine(), Console.ReadLine(), int.Parse(Console.ReadLine()), Console.ReadLine());
+                                        if (mas_khabgah.find_mas_khabgah(k.mskhabgaj) == null)
+                                        {
+                                            Console.WriteLine("ebteda  masool khabgah ra ezafe konid !!");
+                                            break;
+                                        }    
+                                        k.edit_khabgah(num_kh);
                                         break;
                                     }
-                                case 4:
+                                case "4":
                                     {
                                         khabgah.show_all_khabgah();
                                         break;
@@ -1358,39 +1383,52 @@ namespace test_project
                             }
                             break;
                         }
-                    case 2:
+                    case "2":
                         {
                             Console.WriteLine(" chekar mikoni? \n" +
                               "   1: afzoodan bolok \n" +
                               "   2: hazf bolok\n" +
                               "   3: virayesh bolok\n" +
                               "   4:moshahede list bolok ha \n");
-                            int menu_bolok = int.Parse(Console.ReadLine());
+                            var menu_bolok = Console.ReadLine();
                             switch (menu_bolok)
                             {
-                                case 1:
+                                case "1":
                                     {
                                         Console.WriteLine("be tartib nam ,tedad tabaqat ,tedad otaqha, masool bolok  ra benvis :");
-                                        bolok bl = new bolok(Console.ReadLine(), int.Parse(Console.ReadLine()), int.Parse(Console.ReadLine()), mas_bolok.find_mas_bolok(Console.ReadLine()));
+                                        mas_bolok.show_all_masoolan_b();
+                                        bolok bl = new bolok(Console.ReadLine(), int.Parse(Console.ReadLine()), int.Parse(Console.ReadLine()), Console.ReadLine());
+                                        if(mas_bolok.find_mas_bolok(bl.mas_b)==null)
+                                        {
+                                            break;
+                                        }
                                         bl.add_to_bolok();
                                         break;
                                     }
-                                case 2:
-                                    {
+                                case "2":
+                                    {   bolok.show_name_bolok();
+                                        if (bolok.tos == 0) break;
                                         Console.WriteLine("entekhab shomare bolok baraye hazf :");
-                                        bolok.show_name_bolok();
-                                        string b = Console.ReadLine();
-                                        khabgah.remove_khabgah(b);
+                                        int b = int.Parse(Console.ReadLine());
+                                        bolok.remove_bolok(bolok.bolook[b-1].nam_b);
                                         break;
                                     }
-                                case 3:
+                                case "3":
                                     {
-                                        Console.WriteLine("entekhabe bolok baraye virayesh (be tartib nam qabli bolok nam tedad tabaqat , tedad otaqha  va masool bolok jadad ) :");
-                                        bolok.show_name_bolok();
-                                        bolok.edit_bolok(Console.ReadLine(), Console.ReadLine(),int.Parse(Console.ReadLine()),int.Parse(Console.ReadLine()),mas_bolok.find_mas_bolok(Console.ReadLine()));
+                                        bolok.show_all_boloks();
+                                        if (bolok.tos == 0)  break;
+                                        Console.WriteLine("entekhabe SHOMARE bolok baraye virayesh (be  nam tedad tabaqat , tedad otaqha  va masool bolok jadad ) :");
+                                        int num_bolok = int.Parse(Console.ReadLine());
+                                        bolok b1 = new bolok(Console.ReadLine(), int.Parse(Console.ReadLine()), int.Parse(Console.ReadLine()), Console.ReadLine());
+                                        if (mas_bolok.find_mas_bolok(b1.mas_b) == null)
+                                        {
+                                            Console.WriteLine("ebteda masool bolok ra ezafe konid!!");
+                                            break;
+                                        }
+                                        b1.edit_bolok(num_bolok);
                                         break;
                                     }
-                                case 4:
+                                case "4":
                                     {
                                         bolok.show_all_boloks();
                                         break;
@@ -1403,49 +1441,49 @@ namespace test_project
                             }
                             break;
                         }
-                    case 3:
+                    case "3":
                         {
                             Console.WriteLine("gozine ra entekhab konuid :\n" +
                                 "   1: modiriat masoolan khabgah \n" +
                                 "   2: modiriat masoolan bolok \n" +
                                 "   3: modiriat daneshjoyan\n");
-                            int menu_ashkhas = int.Parse(Console.ReadLine());
+                            var menu_ashkhas = Console.ReadLine();
                             switch (menu_ashkhas)
                             {
-                                case 1:
+                                case "1":
                                     {
                                         Console.WriteLine(" chekar mikoni? \n" +
                                 "   1: afzoodan masool khabgah \n" +
                                 "   2: hazf masool khabgah\n" +
                                 "   3: virayesh masool khabgah\n" +
                                 "   4:moshahede list masoolan khabgah ha \n");
-                                        int menu_mas_khabgah = int.Parse(Console.ReadLine());
+                                        var menu_mas_khabgah = Console.ReadLine();
                                         switch (menu_mas_khabgah)
                                         {
-                                            case 1:
+                                            case "1":
                                                 {
-                                                    Console.WriteLine("be tartib name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,khabgah taht masooliat(delkhah)  ra benvis :(6)");
-                                                    mas_khabgah mk = new mas_khabgah(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                    Console.WriteLine("be tartib name kamel ,code melli ,shomare hamrah ,address, semat(delkhah)   ra benvis :(5)");
+                                                    mas_khabgah mk = new mas_khabgah(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(),Console.ReadLine());
                                                     mk.add_to_masool_kh();
                                                     break;
                                                 }
-                                            case 2:
+                                            case "2":
                                                 {
                                                     Console.WriteLine("entekhab shomare masool khabgah baraye hazf :");
                                                     mas_khabgah.show_all_masoolan_kh();
                                                     string m_kh = Console.ReadLine();
-                                                    khabgah.remove_khabgah(m_kh);
+                                                    mas_khabgah.remove_from_ma_kh(m_kh);
                                                     break;
                                                 }
-                                            case 3:
+                                            case "3":
                                                 {
                                                     Console.WriteLine("entekhabe masool  khabgah baraye virayesh " +
-                                                        "(be tartib nam qabli masool khabgah name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,khabgah taht masooliat(delkhah) (7)) :");
+                                                        "(be tartib nam qabli masool khabgah name kamel ,code melli ,shomare hamrah ,address, semat(delkhah)  (6)) :");
                                                     mas_khabgah.show_all_masoolan_kh();
-                                                    mas_khabgah.edit_masool_kh(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                    mas_khabgah.edit_masool_kh(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
                                                     break;
                                                 }
-                                            case 4:
+                                            case "4":
                                                 {
                                                     mas_khabgah.show_all_masoolan_kh();
                                                     break;
@@ -1455,46 +1493,46 @@ namespace test_project
                                                     Console.WriteLine("gozine namotabar !!!!!");
                                                     break;
                                                 }
-                                                break;
+                                                
                                         }
                                         break;
                                     }
-                                case 2:
+                                case "2":
                                     {
                                         Console.WriteLine(" chekar mikoni? \n" +
                                           "   1: afzoodan masool bolok \n" +
                                           "   2: hazf masool bolok\n" +
                                           "   3: virayesh masool bolok\n" +
                                           "   4:moshahede list masoolan bolok ha \n");
-                                        int menu_mas_bolok = int.Parse(Console.ReadLine());
+                                        var menu_mas_bolok = Console.ReadLine();
                                         switch (menu_mas_bolok)
                                         {
-                                            case 1:
+                                            case "1":
                                                 {
-                                                    Console.WriteLine("be tartib name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,khabgah taht masooliat(delkhah)  ra benvis :(6)");
-                                                    mas_khabgah mk = new mas_khabgah(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
-                                                    mk.add_to_masool_kh();
+                                                    Console.WriteLine("be tartib name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,bolok taht masooliat(delkhah)  ra benvis :(6)");
+                                                    mas_bolok mb = new mas_bolok(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                    mb.add_to_masool_bl();
                                                     break;
                                                 }
-                                            case 2:
+                                            case "2":
                                                 {
-                                                    Console.WriteLine("entekhab shomare masool khabgah baraye hazf :");
-                                                    mas_khabgah.show_all_masoolan_kh();
-                                                    string m_kh = Console.ReadLine();
-                                                    khabgah.remove_khabgah(m_kh);
+                                                    Console.WriteLine("entekhab shomare masool bolok baraye hazf :");
+                                                    mas_bolok.show_all_masoolan_b();
+                                                    string m_kb = Console.ReadLine();
+                                                    mas_bolok.remove_from_ma_bl(m_kb);
                                                     break;
                                                 }
-                                            case 3:
+                                            case "3":
                                                 {
-                                                    Console.WriteLine("entekhabe masool  khabgah baraye virayesh " +
-                                                        "(be tartib nam qabli masool khabgah name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,khabgah taht masooliat(delkhah) (7)) :");
-                                                    mas_khabgah.show_all_masoolan_kh();
-                                                    mas_khabgah.edit_masool_kh(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                    Console.WriteLine("entekhabe masool  bolok baraye virayesh " +
+                                                        "(be tartib nam qabli masool bolok name kamel ,code melli ,shomare hamrah ,address, semat(delkhah) ,khabgah taht masooliat(delkhah) (7)) :");
+                                                    mas_bolok.show_all_masoolan_b();
+                                                    mas_bolok.edit_masool_bl(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
                                                     break;
                                                 }
-                                            case 4:
+                                            case "4":
                                                 {
-                                                    mas_khabgah.show_all_masoolan_kh();
+                                                    mas_bolok.show_all_masoolan_b();
                                                     break;
                                                 }
                                             default:
@@ -1502,18 +1540,284 @@ namespace test_project
                                                     Console.WriteLine("gozine namotabar !!!!!");
                                                     break;
                                                 }
-
                                         }
+                                        break;
                                     }
-                                    break;
-                            }break;
-                        }
-                    case 4:
-                        {
+                                case "3":
+                                    {
+                                        Console.WriteLine("chekar mikoni? \n" +
+                                            "   1: afzoodan daneshjoo\n" +
+                                            "   2: hazf daneshjoo\n" +
+                                            "   3: virayesh daneshjoo\n" +
+                                            "   4: jostejo daneshjoo\n" +
+                                            "   5: moshahede etelaat kamel daneshjoo\n" +
+                                            "   6: sabtenam daneshjoo\n" +
+                                            "   7: jabejaii daneshjoo\n");
+                                        var menu_daneshjoo = Console.ReadLine();
+                                        switch(menu_daneshjoo)
+                                        {
+                                            case "1":
+                                                {
+                                                    Console.WriteLine("name kamel ,shomare daneshjooyi ,code melli ,shomare hamrah address otaq(delkhah) bolok(delkhah) khabgah(delkhah) ,tajhizat(delkhah) ra be tartib vared konid : (9)");
+                                                    daneshjoo d1 = new daneshjoo(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                        d1.add_to_danshjo();
+                                                        break;
+                                                }
+                                            case "2":
+                                                {
+                                                    Console.WriteLine("entekhab shomare aneshjoo baraye hazf :");
+                                                    daneshjoo.show_name_students();
+                                                    int student_num = int.Parse(Console.ReadLine());
+                                                    daneshjoo.remove_from_danshjos(daneshjoo.danshjos[student_num - 1].fullname);
+                                                    break;
+                                                }
+                                            case "3":
+                                                {
+                                                    Console.WriteLine("name daneshjoo va baad name kamel ,shomare daneshjooyi ,code melli ,shomare hamrah address otaq(delkhah) bolok(delkhah) khabgah(delkhah) ,tajhizat(delkhah) " +
+                                                        "ra be tartib vared konid : (10)");
+                                                    string nam1 = Console.ReadLine();
+                                                   Console.WriteLine(daneshjoo.find_student(nam1).show_student());
+                                                    daneshjoo.edit_student(nam1, Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), otaq.find_otaq(Console.ReadLine()).sh_ot,
+                                                        bolok.find_bolok(Console.ReadLine()).nam_b, khabgah.find_khabgah(Console.ReadLine()).namekh_kh, tajhizat.find_tajhiz(Console.ReadLine()));
+                                                    break;
+                                                }
+                                            case "4":
+                                                {
+                                                    Console.WriteLine("nam ya shomare daneshjooyi ra baraye jostejo benivisid :");
+                                                    Console.WriteLine(daneshjoo.find_student(Console.ReadLine()).show_student());
+                                                    break;
+                                                }
+                                            case "5":
+                                                {
+                                                    daneshjoo.show_all_daneshjooyan();
+                                                    break;
+                                                }
+                                            case "6":
+                                                {
+                                                    daneshjoo.show_name_students();
+                                                    int num_stu = int.Parse(Console.ReadLine());
+                                                    daneshjoo.sabt_nam(daneshjoo.danshjos[num_stu - 1].fullname);
+                                                    break;
+                                                }
+                                            case "7":
+                                                {
+                                                    daneshjoo.show_name_students();
+                                                    int num_stu = int.Parse(Console.ReadLine());
+                                                    daneshjoo.jabejaii(daneshjoo.danshjos[num_stu - 1].fullname);
+                                                    break;
+                                                }
+                                            default:
+                                                { Console.WriteLine("gozine namotabar !!!");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+                                     
+                            }
                             break;
                         }
-                    case 5:
+                    case "4":
                         {
+                            Console.WriteLine("gozine ra entekhab koonid : \n" +
+                                "    1: sabt amval jadid\n" +
+                                "    2: takhsis amval be otaq ha \n" +
+                                "    3: takhsis amval be daneshjooyan \n" +
+                                "    4: modiriat jabejaii  amval \n" +
+                                "    5: modiriat taamirat\n");
+                            var menu_amval = Console.ReadLine();
+                            switch(menu_amval)
+                            {
+                                case "1":
+                                    {
+                                        tajhizat.sabtTajhizjadid();
+                                        break;
+                                    }
+                                case "2":
+                                    {
+                                        tajhizat.add_to_otaq();
+                                        break;
+                                    }
+                                case "3":
+                                    {
+                                        tajhizat.add_to_student();
+                                        break;
+                                    }
+                                case "4":
+                                    {
+                                        Console.WriteLine("gozine ra entekab konid :\n" +
+                                            "       1: jabejaii tajhizat bein otaqha\n" +
+                                            "       2: jabejaii tajhizat bein daneshjooyan\n  ");
+                                        var num_jabejaii = Console.ReadLine();
+                                        switch(num_jabejaii)
+                                        {
+                                            case "1":
+                                                {
+                                                    tajhizat.jabejaii_tj_otaq();
+                                                    break;
+                                                }
+                                            case "2":
+                                                {
+                                                    tajhizat.jabejaii_tj_student();
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Console.WriteLine("gozine namotabar!!!1");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+                                case "5":
+                                    {
+                                        Console.WriteLine("gozine ra entekhab konid : \n" +
+                                            "   1:  sabte darkhast taamirat\n" +
+                                            "   2:  peygiri vaziiat taamir\n" +
+                                            "   3:  sabt maayob \n");
+                                        var num_taamirat = Console.ReadLine();
+                                        switch(num_taamirat)
+                                        {
+                                            case "1":
+                                                {
+                                                    tajhizat.shomare_amvals_show();
+                                                    string sh_amvl = Console.ReadLine();
+                                                    tajhizat.sabte_darkhast(sh_amvl);
+                                                    break;
+                                                }
+                                            case "2":
+                                                {
+                                                    tajhizat.show_all_amval();
+                                                    string amval=Console.ReadLine();
+                                                    tajhizat.peygiri(amval);
+                                                    break;
+                                                }
+                                            case "3":
+                                                {
+                                                    tajhizat.show_all_amval();
+                                                    string amval = Console.ReadLine();
+                                                    tajhizat.sabt_maayobha(amval);
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Console.WriteLine("gozine namotabar  !!!");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+
+                            }
+                            break;
+                        }
+                    case "5":
+                        {
+                            Console.WriteLine("gozine ra entekhab konid : \n" +
+                                "   1:  gozaresh vaziiat eskan \n" +
+                                "   2:  gozaresh amval\n" +
+                                "   3:  gozaresh haye takhassosi\n");
+                            var num_gozaresh_ha = Console.ReadLine();
+                            switch(num_gozaresh_ha)
+                            {
+                                case "1":
+                                    {
+                                        Console.WriteLine("gozine ra entekhab konid:\n" +
+                                            "   1: amar kolli eskan daneshjoyan\n" +
+                                            "   2: list otaq haye por va khali\n" +
+                                            "   3: zarfiat baqimande har khabgah va bolok\n");
+                                        var num_eskan = Console.ReadLine();
+                                        switch(num_eskan)
+                                        {
+                                            case "1":
+                                                {
+                                                    daneshjoo.amar_kolli();
+                                                    break;
+                                                }
+                                            case "2":
+                                                {
+                                                    otaq.full_or_empty();
+                                                    break;
+                                                }
+                                            case "3":
+                                                {
+                                                    bolok.zrf_bolok();
+                                                    khabgah.zrf_kh();
+                                                    break;
+                                                }
+                                            default:
+                                                { Console.WriteLine("gozine namotabar !!!");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+                                case "2":
+                                    {
+                                        Console.WriteLine("gozine ra entekhab konid :\n" +
+                                            " 1:    list kamel amval\n" +
+                                            " 2:    amval takhsis dade shode be har otaq\n" +
+                                            " 3:    amval takhsis dade shode be har daneshjoo\n" +
+                                            " 4:    amval mayob va darhale tamir\n");
+                                        var num_g_amval =  Console.ReadLine();
+                                        switch(num_g_amval)
+                                        {
+                                            case "1":
+                                                {
+                                                    tajhizat.show_all_amval();
+                                                    break;
+                                                }
+                                            case "2":
+                                                {
+                                                    otaq.list_otaq_tajhizat();
+                                                    break;
+                                                }
+                                            case "3":
+                                                {
+                                                    daneshjoo.list_daneshjoo_tajhizat();
+                                                    break;
+                                                }
+                                            case "4":
+                                                {
+                                                    tajhizat.list_mayobs_drhaltamir();
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Console.WriteLine("gozine namotabar !!!!");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+                                case "3":
+                                    {
+                                        Console.WriteLine("gozine ra entekhab konid :\n" +
+                                            "1:     gozaresh darkhast haye taamir\n" +
+                                            "2      gozaresh tarikhche eskan ");
+                                        var menu_gozaresh_ha = Console.ReadLine();
+                                        switch(menu_gozaresh_ha)
+                                        {
+                                            case "1":
+                                                {
+                                                    tajhizat.gozaresh_darkhast_tamirat();
+                                                    break;
+                                                }
+                                            case "2":
+                                                {
+                                                    daneshjoo.gozaresh_eskan();
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    Console.WriteLine("gozine na motabar !!!");
+                                                    break;
+                                                }
+                                        }
+                                        break;
+                                    }
+
+                            }
                             break;
                         }
                     default:
