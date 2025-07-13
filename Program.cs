@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Word;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -382,7 +383,7 @@ namespace test_project
             set { tajhizat_ot = value; }
         }
         public static otaq[] otaqha = new otaq[1000];
-        protected static int tos = 0;
+        public static int tos = 0;
         public static int tos_otaq
         {
             get { return tos;}
@@ -549,7 +550,7 @@ namespace test_project
         {
             get { return all_info_tajh; }
         }
-        protected static int tos = 0;
+        public static int tos = 0;
         public static int ts
         {
             get { return tos; }
@@ -582,21 +583,28 @@ namespace test_project
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Noe tajhiz (0:Yakhchal, 1:Miz, 2:Sandali, 3:Takht, 4:Komod):");
-            if (!int.TryParse(Console.ReadLine(), out int tajIndex) || tajIndex < 0 || tajIndex > 4)//control input
+            string nooe=Console.ReadLine();
+            int tajindex;
+            while (!int.TryParse(nooe, out tajindex) || tajindex < 0 || tajindex > 4)//control input
             {
-                Console.WriteLine("❌ vorodi na motabar ❌");
-                return;
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                nooe = Console.ReadLine();
             }
-            tajhizt_item noe = (tajhizt_item)tajIndex;
+            tajhizt_item noe = (tajhizt_item)tajindex;
             Console.WriteLine("Part Number : (001 - 005):");
             string partnum = Console.ReadLine();
+            while (!int.TryParse(partnum, out tajindex) || int.Parse(partnum) >= 6 || int.Parse(partnum) <= 0)//control input
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                partnum = Console.ReadLine();
+            }
             int index = int.Parse(partnum) - 1;
             Console.WriteLine("shomare amval : ( 5 number) ");
             string shmare_amval = Console.ReadLine();
             int i = 0;
             for (; i < 1000 && sh_amvals[i, index] != null; i++)//find tekrari
             {
-                if (sh_amvals[i, index] == (shmare_amval + partnum))
+                if (sh_amvals[i, index] == (shmare_amval +" "+ partnum))
                 {
                     Console.WriteLine("❌ shomare amval tekreri ❌");
                     return;
@@ -604,46 +612,67 @@ namespace test_project
             }
             if (i >= 1000)
             {
-                Console.WriteLine("❌ zarfist takmil shode baraye in part number ❌");
+                Console.WriteLine("❌ zarfiat takmil shode baraye in part number ❌");
                 return;
             }
-            sh_amvals[i, index] = shmare_amval + partnum;
-            tajhizat jadid = new tajhizat(noe, partnum, shmare_amval + partnum);
+            sh_amvals[i, index] = shmare_amval +" "+ partnum;
+            tajhizat jadid = new tajhizat(noe, partnum, shmare_amval +" "+ partnum);
             jadid.add_to_tajhizat();
             Console.ResetColor();
         }
         public static void add_to_otaq()
         {
             otaq.show_name_otaq();
-            Console.WriteLine("chose your otaq !!");
+            if (otaq.tos == 0) return;
+            Console.WriteLine("chose your otaq nummber !!");
             string ot = Console.ReadLine();
-            otaq ot1 = otaq.find_otaq(ot);
+            int pass;
+            while (!int.TryParse(ot, out pass) || int.Parse(ot) > otaq.tos)
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                ot = Console.ReadLine();
+            }
+            otaq ot1 = otaq.find_otaq(otaq.otaqha[int.Parse(ot)-1].sh_ot);
             if (ot1 == null)
             {
                 Console.WriteLine("❌ otaq not found ❌");
                 return;
             }
-            sabtTajhizjadid();
-            ot1.taj_ot = all_info_tajh[tos - 1];
+            tajhizat.show_all_amval();
+            if (tajhizat.tos == 0) return;
+            Console.WriteLine("chose tajhiz number: ");
+            string tj = Console.ReadLine();
+            int passes;
+            while (!int.TryParse(tj, out passes) || int.Parse(tj) > tajhizat.tos)
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                tj = Console.ReadLine();
+            }
+            ot1.taj_ot = all_info_tajh[int.Parse(tj) - 1];
+            Console.WriteLine("movafaqiat amiz bood :)");
         }
         public static void jabejaii_tj_otaq()
         {
             otaq.show_name_otaq();
-            Console.WriteLine("chose otaq to jabejaii :");
+            if (otaq.tos == 0) return;
+            Console.WriteLine("chose otaq to jabejaii :\n first: ? ");
             string ot_name1 = Console.ReadLine();
-            otaq ot1 = otaq.find_otaq(ot_name1);
-            if (ot1 == null)
+            int passes;
+            while (!int.TryParse(ot_name1, out passes) || int.Parse(ot_name1) > otaq.tos)
             {
-                Console.WriteLine("wrong otaq ");
-                return;
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                ot_name1 = Console.ReadLine();
             }
+            otaq ot1 = otaq.find_otaq(otaq.otaqha[int.Parse(ot_name1)-1].sh_ot);
+            Console.WriteLine("second : ?");
             string ot_name2 = Console.ReadLine();
-            otaq ot2 = otaq.find_otaq(ot_name2);
-            if (ot2 == null)
+            int pas;
+            while (!int.TryParse(ot_name2, out pas) || int.Parse(ot_name2) > otaq.tos)
             {
-                Console.WriteLine("wrong otaq ");
-                return;
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                ot_name2 = Console.ReadLine();
             }
+            otaq ot2 = otaq.find_otaq(otaq.otaqha[int.Parse(ot_name2)-1].sh_ot);
             tajhizat t = ot2.taj_ot;
             ot2.taj_ot = ot1.taj_ot;
             ot1.taj_ot = t;
@@ -651,35 +680,56 @@ namespace test_project
         public static void add_to_student()
         {
             daneshjoo.show_name_students();
-            Console.WriteLine("choosse student : ");
+            if (daneshjoo.tos == 0) return;
+            Console.WriteLine("choosse student number : ");
             string st_name = Console.ReadLine();
-            daneshjoo st1 = daneshjoo.find_student(st_name);
+            int ps;
+            while (!int.TryParse(st_name, out ps) || int.Parse(st_name) > daneshjoo.tos || int.Parse(st_name) <= 0)
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                st_name = Console.ReadLine();
+            }
+            daneshjoo st1 = daneshjoo.find_student(daneshjoo.danshjos[int.Parse(st_name)-1].fullname);
             if (st1 == null)
             {
                 Console.WriteLine("❌ student not found ❌");
                 return;
             }
-            sabtTajhizjadid();
-            st1.tj_st = all_info_tajh[tos - 1];
+            tajhizat.show_all_amval();
+            if (tajhizat.tos == 0) return;
+            Console.WriteLine("chose tajhiz number: ");
+            string tj = Console.ReadLine();
+            int passes;
+            while (!int.TryParse(tj, out passes) || int.Parse(tj) > tajhizat.tos || int.Parse(tj) <= 0)
+            {
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                tj = Console.ReadLine();
+            }
+            st1.tj_st = all_info_tajh[int.Parse(tj) - 1];
+            Console.WriteLine("movafaqiat amiz bood :)");
         }
         public static void jabejaii_tj_student()
         {
             daneshjoo.show_name_students();
-            Console.WriteLine("chose daneshjoo to jabejaii :");
+            if (daneshjoo.tos == 0) return;
+            Console.WriteLine("chose daneshjoo to jabejaii : \n first: ?");
             string st_name1 = Console.ReadLine();
-            daneshjoo st1 = daneshjoo.find_student(st_name1);
-            if (st1 == null)
+            int passes;
+            while (!int.TryParse(st_name1, out passes) || int.Parse(st_name1) > daneshjoo.tos)
             {
-                Console.WriteLine("wrong student ");
-                return;
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                st_name1 = Console.ReadLine();
             }
+            daneshjoo st1 = daneshjoo.find_student(daneshjoo.danshjos[int.Parse(st_name1)-1].fullname);
+            Console.WriteLine("second : ?");
             string st_name2 = Console.ReadLine();
-            daneshjoo st2 = daneshjoo.find_student(st_name2);
-            if (st2 == null)
+            int pas;
+            while (!int.TryParse(st_name2, out pas) || int.Parse(st_name2) > daneshjoo.tos)
             {
-                Console.WriteLine("wrong student ");
-                return;
+                Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                st_name2 = Console.ReadLine();
             }
+            daneshjoo st2 = daneshjoo.find_student(daneshjoo.danshjos[int.Parse(st_name2)-1].fullname);
             tajhizat t = st2.tj_st;
             st2.tj_st = st1.tj_st;
             st1.tj_st = t;
@@ -706,11 +756,15 @@ namespace test_project
         {
             for(int i=0;i<sh_amvals.GetLength(0);i++)
             {
+                int count = 1;
                 for(int j=0;j<sh_amvals.GetLength(1);j++)
                 {
-                    Console.Write(sh_amvals[i, j] + " ");
+                    if (sh_amvals[i, j] != null)
+                    {
+                        Console.Write((count)+" : "+sh_amvals[i, j] + " \n");
+                        count++;
+                    }
                 }
-                Console.WriteLine("");
             }
         }
         public static void sabte_darkhast(string shomareamval1)
@@ -744,7 +798,8 @@ namespace test_project
                 return;
             }
             t1.status_tajhiz = status.maayob;
-            gozaresh_darkhast_ha[count_gozaresh_amvl] = $"{t1.tajhizat_taj} ba partNumber {t1.patnumber_taj} baraye {(daneshjoo.find_student(t1.shmare_amv)).fullname} dar hal taamir";
+            var tj_stu = daneshjoo.find_student(t1.shmare_amv) == null ? "null" : (daneshjoo.find_student(t1.shmare_amv)).fullname;
+            gozaresh_darkhast_ha[count_gozaresh_amvl] = $"{t1.tajhizat_taj} ba partNumber {t1.patnumber_taj} baraye {tj_stu} dar hal taamir";
             count_gozaresh_amvl++;
         }
         public static void show_all_amval()
@@ -1107,12 +1162,7 @@ namespace test_project
             set { tajhizat_List = value; }
         }
         public static daneshjoo[] danshjos = new daneshjoo[1000];
-        public static int tos;
-        public int ts
-        {
-            get { return tos; }
-            set { tos = value; }
-        }
+        public static int tos=0;
         protected static string[] gozarsh_eskan = new string[1000];
         public static string[] gozares
         {
@@ -1129,32 +1179,28 @@ namespace test_project
             this.bolokDaneshjoo = bl_d;
             this.khabgahDaneshjoo = kh_d;
             this.tajhizat_List = tajhizat_List;
-            tos = 0;
 
         }
         public string show_student()
         {
             string tajhizInfo_std = tajhizat_List != null ? tajhizat_List.show_tajhiz() : "null";
-            return base.showperson() + $"  shmare daneshjooii: {this.studentNumber} and khabgah {this.khabgahDaneshjoo} bolok {this.bolokDaneshjoo} otaq {this.ot_daneshjo} tajhizat : {tajhizInfo_std} ";
+            return "fullname : "+base.fullname+$" shomare daneshjooi : {this.studentNumber} " +" code melli : "+ base.code_melli_per +" shomare hamrah : "+ base.phone_number_per +
+               " address : "+ base.address_person + $"  and khabgah {this.khabgahDaneshjoo} bolok {this.bolokDaneshjoo} otaq {this.ot_daneshjo} tajhizat : {tajhizInfo_std} ";
         }
 
         public  void add_to_danshjo()
         {
             if (tos < danshjos.Length)
             {
-                if (daneshjoo.find_student(this.fullname) == null)
-                {
+               
                     danshjos[tos] = this;
                     tos++;
-                }
-                else Console.WriteLine("this student is exist !!");
             }
             else
             {
                 Console.WriteLine("the danshjos is full ");
             }
         }
-
         public static void remove_from_danshjos(string bl)
         {
             if (tos != 0)
@@ -1186,8 +1232,7 @@ namespace test_project
         {
             if (tos == 0)
             {
-                Console.WriteLine("no student yet! ");
-                
+               // Console.WriteLine("no student yet! "); 
             }
             for (int i = 0; i < tos; i++)
             {
@@ -1196,7 +1241,7 @@ namespace test_project
                     return danshjos[i];
                 }
             }
-            Console.WriteLine("not found!! ");
+           // Console.WriteLine("not found!! ");
             return null;
         }
         public static void show_all_daneshjooyan()
@@ -1205,24 +1250,16 @@ namespace test_project
             Console.WriteLine(new string('~', 200));
             for (int i = 0; i < tos; i++)
             {
-                Console.WriteLine(danshjos[i].show_student());
+                Console.WriteLine((i+1) + " : " + danshjos[i].show_student());
                 Console.WriteLine(new string('_', 200));
             }
         }
-        public static void edit_student(string n1, string fullname_per, string studentNumber, string code_melli_per, string phone_number_per, string address_per, string ot_d = null, string bl_d = null,
-            string kh_d = null, tajhizat tajhizat_List=null)
+        public void edit_student(int index)
         {
-            bool edited = false;
-            for (int i = 0; i < tos; i++)
-            {
-                if (danshjos[i].fullname==n1)
+                if (index <= tos)
                 {
-                    daneshjoo d = new daneshjoo(fullname_per,studentNumber ,code_melli_per, phone_number_per, address_per,ot_d,bl_d,kh_d,tajhizat_List);
-                    danshjos[i] = d; edited = true;
+                    danshjos[index] = this; 
                 }
-
-            }
-            if (!edited) Console.WriteLine("no found to edit !!! ");
         }
         public static void show_name_students()
         {
@@ -1248,35 +1285,40 @@ namespace test_project
                 Console.WriteLine("Student not found!");
                 return;
             }
-
             khabgah.show_name_khabgahs();
+            if(khabgah.tos == 0) return; 
             Console.WriteLine("select khabgah by number:");
-            int kh = int.Parse(Console.ReadLine());
-            if (kh > khabgah.tos)
+            string num_kh = Console.ReadLine();
+            int passs;
+            while (!int.TryParse(num_kh, out passs) || int.Parse(num_kh) > khabgah.tos)
             {
-                Console.WriteLine("Khabgah not found!");
-                return;
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_kh = Console.ReadLine();
             }
-            var kh2 = khabgah.find_khabgah(khabgah.khbgh[kh - 1].namekh_kh);
+            var kh2 = khabgah.find_khabgah(khabgah.khbgh[int.Parse(num_kh) - 1].mskhabgaj);
             string k2 = kh2.namekh_kh;
             bolok.show_name_bolok();
+            if (bolok.tos == 0) return;
             Console.WriteLine("select bolok by number: ");
-            int bl = int.Parse(Console.ReadLine());
-            if (bl > bolok.tos)
+            string num_bl = Console.ReadLine();
+            int passes;
+            while (!int.TryParse(num_bl, out passes) || int.Parse(num_bl) > bolok.tos)
             {
-                Console.WriteLine("Bolok not found!");
-                return;
-            };
-            var b2 = bolok.bolook[bl - 1].nam_b;
-            otaq.show_name_otaq();
-            Console.WriteLine("select otaq by number: ");
-            int ot = int.Parse(Console.ReadLine());
-            if(ot>otaq.tos_otaq)
-            {
-                Console.WriteLine("otaq not found !!");
-                return;
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_bl = Console.ReadLine();
             }
-            otaq ot1 = otaq.find_otaq(otaq.otaqha[ot-1].sh_ot);
+            var b2 = bolok.bolook[int.Parse(num_bl) - 1].nam_b;
+            otaq.show_name_otaq();
+            if (otaq.tos == 0) return;
+            Console.WriteLine("select otaq by number: ");
+            string num_ot = Console.ReadLine();
+            int passess;
+            while (!int.TryParse(num_ot, out passess) || int.Parse(num_ot) > otaq.tos)
+            {
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_ot = Console.ReadLine();
+            }
+            otaq ot1 = otaq.find_otaq(otaq.otaqha[int.Parse(num_ot)-1].sh_ot);
             d.khabgahDaneshjoo = k2;
             d.bolokDaneshjoo = b2;
             d.otaghDaneshjoo = ot1.sh_ot;
@@ -1293,16 +1335,39 @@ namespace test_project
                 return;
             }
             Console.WriteLine(d1.show_student());
-            Console.WriteLine("be tartib khabgah bolok va otaq ra begooid");
             khabgah.show_name_khabgahs();
-            int num_khabgah = int.Parse(Console.ReadLine());
-            d1.kh_daneshjo = khabgah.khbgh[num_khabgah-1].namekh_kh;
+            if (khabgah.tos == 0) return;
+            Console.WriteLine(" SHOMARE  khabgah ra entekhab konid :");
+            string num_kh = Console.ReadLine();
+            int passs;
+            while (!int.TryParse(num_kh, out passs) || int.Parse(num_kh) > khabgah.tos)
+            {
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_kh = Console.ReadLine();
+            }
+            d1.kh_daneshjo = khabgah.khbgh[int.Parse(num_kh)-1].namekh_kh;
             bolok.show_name_bolok();
-            int num_bl = int.Parse(Console.ReadLine());
-            d1.bolokDaneshjoo = bolok.bolook[num_khabgah-1].nam_b;
+            if (bolok.tos == 0) return;
+            Console.WriteLine("select bolok by number: ");
+            string num_bl = Console.ReadLine();
+            int passes;
+            while (!int.TryParse(num_bl, out passes) || int.Parse(num_bl) > bolok.tos)
+            {
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_bl = Console.ReadLine();
+            }
+            d1.bolokDaneshjoo = bolok.bolook[int.Parse(num_bl)-1].nam_b;
             otaq.show_name_otaq();
-            int num_ot = int.Parse(Console.ReadLine());
-            d1.otaghDaneshjoo = otaq.otaqha[num_ot-1].sh_ot;
+            if (otaq.tos == 0) return;
+            Console.WriteLine("select otaq by number: ");
+            string num_ot = Console.ReadLine();
+            int passess;
+            while (!int.TryParse(num_ot, out passess) || int.Parse(num_ot) > otaq.tos)
+            {
+                Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                num_ot = Console.ReadLine();
+            }
+            d1.otaghDaneshjoo = otaq.otaqha[int.Parse(num_ot)-1].sh_ot;
         }
 
         public static void amar_kolli()
@@ -1457,6 +1522,20 @@ namespace test_project
                                         {
                                             Console.WriteLine("ebteda  masool khabgah ra ezafe konid !!");
                                             break;
+                                        }
+                                        for(int i = 0 ; i < bl.otaqq_b ; i++)
+                                        {
+                                            Console.WriteLine($"otaq {i+1} :\n shomare otaq va tabaqe otaq ra vared konid :");
+                                            string sh_otaq = Console.ReadLine();
+                                            string ta_otaq = Console.ReadLine();
+                                            int passs;
+                                            while (!int.TryParse(ta_otaq, out passs) || int.Parse(ta_otaq) <= 0)
+                                            {
+                                                Console.WriteLine("boloki ba in shomare nadarim dobare talash kon ");
+                                                ta_otaq = Console.ReadLine();
+                                            }
+                                            otaq ot = new otaq(sh_otaq, int.Parse(ta_otaq));
+                                            ot.add_otaq();
                                         }
                                         bl.add_to_bolok();
                                         break;
@@ -1668,6 +1747,7 @@ namespace test_project
                                             case "2":
                                                 {
                                                     daneshjoo.show_name_students();
+                                                    if (daneshjoo.tos == 0) break;
                                                     Console.WriteLine("entekhab shomare daneshjoo baraye hazf :");
                                                     string student_num = Console.ReadLine();
                                                     int passs;
@@ -1682,6 +1762,7 @@ namespace test_project
                                             case "3":
                                                 {
                                                     daneshjoo.show_all_daneshjooyan();
+                                                    if (daneshjoo.tos == 0) break;
                                                     Console.WriteLine("entekhab SHOMARE daneshjoo baraye virayesh :");
                                                     string num_stu = Console.ReadLine();
                                                     int passs;
@@ -1690,18 +1771,25 @@ namespace test_project
                                                         Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
                                                         num_stu = Console.ReadLine();
                                                     }
-                                                    Console.WriteLine("name daneshjoo va baad name kamel ,shomare daneshjooyi ,code melli ,shomare hamrah address " +
+                                                    Console.WriteLine(" name kamel ,shomare daneshjooyi ,code melli ,shomare hamrah address " +
                                                         "otaq(delkhah) bolok(delkhah) khabgah(delkhah) ,tajhizat(delkhah) ra be tartib vared konid : (10)");
-                                                    string nam1 = Console.ReadLine();
-                                                   Console.WriteLine(daneshjoo.find_student(nam1).show_student());
-                                                    daneshjoo.edit_student(nam1, Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), otaq.find_otaq(Console.ReadLine()).sh_ot,
-                                                        bolok.find_bolok(Console.ReadLine()).nam_b, khabgah.find_khabgah(Console.ReadLine()).namekh_kh, tajhizat.find_tajhiz(Console.ReadLine()));
+                                                    daneshjoo d1 = new daneshjoo(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+                                                    d1.edit_student(int.Parse(num_stu)-1);
                                                     break;
                                                 }
                                             case "4":
                                                 {
-                                                    Console.WriteLine("nam ya shomare daneshjooyi ra baraye jostejo benivisid :");
-                                                    Console.WriteLine(daneshjoo.find_student(Console.ReadLine()).show_student());
+                                                    daneshjoo.show_name_students();
+                                                    if (daneshjoo.tos == 0) break;
+                                                    Console.WriteLine("entekhab SHOMARE daneshjoo :");
+                                                    string num_stu = Console.ReadLine();
+                                                    int passs;
+                                                    while (!int.TryParse(num_stu, out passs) || int.Parse(num_stu) > daneshjoo.tos)
+                                                    {
+                                                        Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                                                        num_stu = Console.ReadLine();
+                                                    }
+                                                    Console.WriteLine(daneshjoo.find_student(daneshjoo.danshjos[int.Parse(num_stu)-1].fullname).show_student());
                                                     break;
                                                 }
                                             case "5":
@@ -1712,15 +1800,29 @@ namespace test_project
                                             case "6":
                                                 {
                                                     daneshjoo.show_name_students();
-                                                    int num_stu = int.Parse(Console.ReadLine());
-                                                    daneshjoo.sabt_nam(daneshjoo.danshjos[num_stu - 1].fullname);
+                                                    if (daneshjoo.tos == 0) break;
+                                                    string num_stu = Console.ReadLine();
+                                                    int passs;
+                                                    while (!int.TryParse(num_stu, out passs) || int.Parse(num_stu) > daneshjoo.tos)
+                                                    {
+                                                        Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                                                        num_stu = Console.ReadLine();
+                                                    }
+                                                    daneshjoo.sabt_nam(daneshjoo.danshjos[int.Parse(num_stu)-1].fullname);
                                                     break;
                                                 }
                                             case "7":
                                                 {
                                                     daneshjoo.show_name_students();
-                                                    int num_stu = int.Parse(Console.ReadLine());
-                                                    daneshjoo.jabejaii(daneshjoo.danshjos[num_stu - 1].fullname);
+                                                    if (daneshjoo.tos == 0) break;
+                                                    string num_stu = Console.ReadLine();
+                                                    int passs;
+                                                    while (!int.TryParse(num_stu, out passs) || int.Parse(num_stu) > daneshjoo.tos)
+                                                    {
+                                                        Console.WriteLine("eshtabah vared kardid !! dobare talash kon ");
+                                                        num_stu = Console.ReadLine();
+                                                    }
+                                                    daneshjoo.jabejaii(daneshjoo.danshjos[int.Parse(num_stu) - 1].fullname);
                                                     break;
                                                 }
                                             default:
@@ -1798,22 +1900,44 @@ namespace test_project
                                             case "1":
                                                 {
                                                     tajhizat.shomare_amvals_show();
+                                                    if (tajhizat.tos == 0) break;
+                                                    Console.WriteLine("entekhab shomare tajhiz baraye darkhast :");
                                                     string sh_amvl = Console.ReadLine();
-                                                    tajhizat.sabte_darkhast(sh_amvl);
+                                                    int ps;
+                                                    while (!int.TryParse(sh_amvl, out ps) || int.Parse(sh_amvl) > tajhizat.tos || int.Parse(sh_amvl) <= 0)
+                                                    {
+                                                        Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                                                        sh_amvl = Console.ReadLine();
+                                                    }
+                                                    tajhizat.sabte_darkhast(tajhizat.all_tj[int.Parse(sh_amvl)-1].shmare_amv);
                                                     break;
                                                 }
                                             case "2":
                                                 {
                                                     tajhizat.show_all_amval();
+                                                    if (tajhizat.tos == 0) break;
                                                     string amval=Console.ReadLine();
-                                                    tajhizat.peygiri(amval);
+                                                    int ps;
+                                                    while (!int.TryParse(amval, out ps) || int.Parse(amval) > tajhizat.tos || int.Parse(amval) <= 0)
+                                                    {
+                                                        Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                                                        amval = Console.ReadLine();
+                                                    }
+                                                    tajhizat.peygiri(tajhizat.all_tj[int.Parse(amval)-1].shmare_amv);
                                                     break;
                                                 }
                                             case "3":
                                                 {
                                                     tajhizat.show_all_amval();
+                                                    if (tajhizat.tos == 0) break;
                                                     string amval = Console.ReadLine();
-                                                    tajhizat.sabt_maayobha(amval);
+                                                    int ps;
+                                                    while (!int.TryParse(amval, out ps) || int.Parse(amval) > tajhizat.tos || int.Parse(amval) <= 0)
+                                                    {
+                                                        Console.WriteLine("❌ vorodi na motabar ❌ dobare talash kon");
+                                                        amval = Console.ReadLine();
+                                                    }
+                                                    tajhizat.sabt_maayobha(tajhizat.all_tj[int.Parse(amval)-1].shmare_amv);
                                                     break;
                                                 }
                                             default:
